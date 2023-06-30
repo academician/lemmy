@@ -73,6 +73,7 @@ pub enum SortType {
 #[cfg_attr(feature = "full", ts(export))]
 /// The comment sort types. See here for descriptions: https://join-lemmy.org/docs/en/users/03-votes-and-ranking.html
 pub enum CommentSortType {
+  Confidence,
   Hot,
   Top,
   New,

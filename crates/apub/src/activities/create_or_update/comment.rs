@@ -195,6 +195,9 @@ impl ActivityHandler for CreateOrUpdateNote {
     // Calculate initial hot_rank
     CommentAggregates::update_hot_rank(context.pool(), comment.id).await?;
 
+    // Calculate initial confidence
+    CommentAggregates::update_confidence(context.pool(), comment.id).await?;
+
     let do_send_email = self.kind == CreateOrUpdateType::Create;
     let post_id = comment.post_id;
     let post = Post::read(context.pool(), post_id).await?;

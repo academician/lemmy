@@ -2,7 +2,7 @@ use crate::{
   aggregates::structs::CommentAggregates,
   newtypes::CommentId,
   schema::comment_aggregates,
-  utils::{functions::hot_rank, get_conn, DbPool},
+  utils::{functions::{comment_confidence, hot_rank}, get_conn, DbPool},
 };
 use diesel::{result::Error, ExpressionMethods, QueryDsl};
 use diesel_async::RunQueryDsl;
@@ -24,6 +24,19 @@ impl CommentAggregates {
       .set(comment_aggregates::hot_rank.eq(hot_rank(
         comment_aggregates::score,
         comment_aggregates::published,
+      )))
+      .get_result::<Self>(conn)
+      .await
+  }
+
+  pub async fn update_confidence(pool: &DbPool, comment_id: CommentId) -> Result<Self, Error> {
+    let conn = &mut get_conn(pool).await?;
+
+    diesel::update(comment_aggregates::table)
+      .filter(comment_aggregates::comment_id.eq(comment_id))
+      .set(comment_aggregates::confidence.eq(comment_confidence(
+        comment_aggregates::upvotes,
+        comment_aggregates::downvotes,
       )))
       .get_result::<Self>(conn)
       .await

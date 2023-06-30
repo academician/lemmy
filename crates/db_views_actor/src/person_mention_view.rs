@@ -270,7 +270,8 @@ impl<'a> PersonMentionQuery<'a> {
       query = query.filter(person::bot_account.eq(false));
     };
 
-    query = match self.sort.unwrap_or(CommentSortType::Hot) {
+    query = match self.sort.unwrap_or(CommentSortType::Confidence) {
+      CommentSortType::Confidence => query.then_order_by(comment_aggregates::confidence.desc()),
       CommentSortType::Hot => query.then_order_by(comment_aggregates::hot_rank.desc()),
       CommentSortType::New => query.then_order_by(comment::published.desc()),
       CommentSortType::Old => query.then_order_by(comment::published.asc()),

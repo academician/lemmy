@@ -278,6 +278,10 @@ pub mod functions {
     fn hot_rank(score: BigInt, time: Timestamp) -> Integer;
   }
 
+  sql_function! {
+    fn comment_confidence(upvotes: BigInt, downvotes: BigInt) -> Float8;
+  }
+
   sql_function!(fn lower(x: Text) -> Text);
 }
 

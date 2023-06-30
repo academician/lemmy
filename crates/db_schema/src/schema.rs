@@ -105,6 +105,7 @@ diesel::table! {
         published -> Timestamp,
         child_count -> Int4,
         hot_rank -> Int4,
+        confidence -> Float8,
     }
 }
 
